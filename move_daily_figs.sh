@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Constants
-DIR="${HOME}/stack/jrnl/logfigures/"
-DATE=`date +%Y%m%d`
+SOURCE="none"
+TARGNAME="none"
 
 # Variables for collecting flags
 COPY=0
@@ -15,13 +15,25 @@ do
             COPY=1
             ;;
         *)  # Process file name and target name
+            if [ $SOURCE == "none" ]; then
+                SOURCE=$arg
+            elif [ $TARGNAME == "none" ]; then
+                TARGNAME=$arg
+            fi
     esac
 done
 
+# Append date to target file name
+DIR="${HOME}/stack/jrnl/logfigures"
+DATE=`date +%Y%m%d`
+NAME="${TARGNAME%.*}"
+EXTENSION="${TARGNAME##*.}"
+TARGET="${DIR}/${TARGNAME}-${DATE}.${EXTENSION}"
+
 # Processing
 if [ $COPY == 0 ]; then
-    echo "Moving..."
+    `mv $SOURCE $TARGET`
 elif [ $COPY == 1 ]; then
-    echo "Copying..."
+    `cp $SOURCE $TARGET`
 fi
 
